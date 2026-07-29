@@ -1,4 +1,4 @@
-package br.com.davidalain;
+package br.com.davidalain.passeiocavalo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
