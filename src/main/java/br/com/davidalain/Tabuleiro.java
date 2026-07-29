@@ -258,7 +258,7 @@ public class Tabuleiro {
 
             Collections.reverse(caminho);
 
-            final Posicao primeiraPosicao = caminho.getFirst();
+            final Posicao primeiraPosicao = caminho.get(0);
             int quantidadeSolucoes = 1 + this.mapaPosicaoInicialQuantidadeSolucoes.getOrDefault(primeiraPosicao, 0);
             this.mapaPosicaoInicialQuantidadeSolucoes.put(primeiraPosicao, quantidadeSolucoes);
 
