@@ -12,7 +12,7 @@ import java.util.Objects;
 import java.util.stream.IntStream;
 
 @RestController
-@RequestMapping("/api/cavalo")
+@RequestMapping("/api/passeiocavalo")
 public class PasseioController {
 
     private final String tokenServidor;
@@ -22,8 +22,8 @@ public class PasseioController {
     }
 
     @GetMapping("/health")
-    public ResponseEntity<String> healthCheck() {
-        return ResponseEntity.ok("UP");
+    public ResponseEntity<Map<String, Object>> healthCheck() {
+        return ResponseEntity.ok(Map.of("status", "UP"));
     }
 
     @PostMapping("/calcular")
