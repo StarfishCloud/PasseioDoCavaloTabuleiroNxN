@@ -1,37 +1,9 @@
-package br.com.davidalain;
+package br.com.davidalain.passeiocavalo.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-public class Posicao implements Comparable<Posicao> {
-    public final int linha;
-    public final int coluna;
-
-    public Posicao(int linha, int coluna) {
-        this.linha = linha;
-        this.coluna = coluna;
-    }
-
-    public int getLinha() {
-        return linha;
-    }
-
-    public int getColuna() {
-        return coluna;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        Posicao posicao = (Posicao) o;
-        return linha == posicao.linha && coluna == posicao.coluna;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(linha, coluna);
-    }
+public record Posicao(int linha, int coluna) implements Comparable<Posicao> {
 
     @Override
     public int compareTo(Posicao o) {
@@ -57,12 +29,15 @@ public class Posicao implements Comparable<Posicao> {
         // Verifica cada possível movimento
         for (int[] deslocamento : deslocamentos) {
             int novaLinha = this.linha + deslocamento[0];
+            if (!Posicao.indiceValido(novaLinha, dimensaoTabuleiro))
+                continue;
+
             int novaColuna = this.coluna + deslocamento[1];
+            if (!Posicao.indiceValido(novaColuna, dimensaoTabuleiro))
+                continue;
 
             // Se a nova posição é válida, adiciona à lista de movimentos possíveis
-            if (posicaoValida(novaLinha, novaColuna, dimensaoTabuleiro)) {
-                movimentos.add(new Posicao(novaLinha, novaColuna));
-            }
+            movimentos.add(new Posicao(novaLinha, novaColuna));
         }
 
         return movimentos;
@@ -70,24 +45,24 @@ public class Posicao implements Comparable<Posicao> {
 
     /**
      * Calculates the mirrored position of the current position on a board with the given dimension.
-     *
+     * <p>
      * The mirrored position is determined based on the center of the board. For positions beyond the
      * center, the mirrored position is calculated by reflecting the row and column indices.
-     *
-     *      resultado = 6 - linha - 1
-     *      linha = 0, resultado = 0
-     *      linha = 1, resultado = 1
-     *      linha = 2, resultado = 2
-     *      linha = 3, resultado = 2 //6 - 3 - 1 = 2
-     *      linha = 4, resultado = 1 //6 - 4 - 1 = 1
-     *      linha = 5, resultado = 0 //6 - 5 - 1 = 0
-     *
-     *      resultado = 5 - linha - 1
-     *      linha = 0, resultado = 0
-     *      linha = 1, resultado = 1
-     *      linha = 2, resultado = 2 //5 - 2 - 1 = 2
-     *      linha = 3, resultado = 1 //5 - 3 - 1 = 1
-     *      linha = 4, resultado = 0 //5 - 4 - 1 = 0
+     * <p>
+     * resultado = 6 - linha - 1
+     * linha = 0, resultado = 0
+     * linha = 1, resultado = 1
+     * linha = 2, resultado = 2
+     * linha = 3, resultado = 2 //6 - 3 - 1 = 2
+     * linha = 4, resultado = 1 //6 - 4 - 1 = 1
+     * linha = 5, resultado = 0 //6 - 5 - 1 = 0
+     * <p>
+     * resultado = 5 - linha - 1
+     * linha = 0, resultado = 0
+     * linha = 1, resultado = 1
+     * linha = 2, resultado = 2 //5 - 2 - 1 = 2
+     * linha = 3, resultado = 1 //5 - 3 - 1 = 1
+     * linha = 4, resultado = 0 //5 - 4 - 1 = 0
      *
      * @param dimensaoTabuleiro the dimension of the square board (number of rows and columns)
      * @return a new Posicao object representing the mirrored position
@@ -95,7 +70,8 @@ public class Posicao implements Comparable<Posicao> {
     public Posicao posicaoEspelhoOriginal(int dimensaoTabuleiro) {
 
         int indiceMax = dimensaoTabuleiro % 2 == 0 ?
-                (dimensaoTabuleiro / 2) : (dimensaoTabuleiro + 1) / 2;
+                (dimensaoTabuleiro / 2) :
+                (dimensaoTabuleiro + 1) / 2;
 
         int linhaEspelho = this.linha;
         int colunaEspelho = this.coluna;
@@ -106,19 +82,19 @@ public class Posicao implements Comparable<Posicao> {
         if (this.coluna >= indiceMax)
             colunaEspelho = (dimensaoTabuleiro - this.coluna - 1);
 
-        if(linhaEspelho > colunaEspelho)
+        if (linhaEspelho > colunaEspelho)
             return new Posicao(colunaEspelho, linhaEspelho);
         else
             return new Posicao(linhaEspelho, colunaEspelho);
     }
 
     public static boolean posicaoValida(int novaLinha, int novaColuna, int dimensao) {
-        if ((novaLinha < 0) || (novaLinha >= dimensao))
-            return false;
-        if ((novaColuna < 0) || (novaColuna >= dimensao))
-            return false;
+        return indiceValido(novaLinha, dimensao) &&
+                indiceValido(novaColuna, dimensao);
+    }
 
-        return true;
+    private static boolean indiceValido(int indice, int dimensao) {
+        return ((indice >= 0) && (indice < dimensao));
     }
 
     public String toString2() {
