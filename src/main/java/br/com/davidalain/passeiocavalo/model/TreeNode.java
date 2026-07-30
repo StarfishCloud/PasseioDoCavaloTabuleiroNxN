@@ -1,4 +1,4 @@
-package br.com.davidalain;
+package br.com.davidalain.passeiocavalo.model;
 
 import java.io.Serializable;
 import java.util.Comparator;
