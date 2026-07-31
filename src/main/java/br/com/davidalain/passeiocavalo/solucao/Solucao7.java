@@ -5,16 +5,13 @@ import br.com.davidalain.passeiocavalo.model.Tabuleiro;
 import br.com.davidalain.passeiocavalo.model.TreeNode;
 
 import java.util.List;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public record Solucao7(
         Tabuleiro tabuleiro
-) {
+) implements Solucao {
 
-
-    /**
-     *
-     */
     public int encontrarPasseioDoCavalo7(Posicao posicaoInicial) {
         int movimentosRealizados = 1;
         final TreeNode<Posicao> treeNodeInicial = new TreeNode<Posicao>(posicaoInicial, movimentosRealizados, null);
@@ -97,6 +94,32 @@ public record Solucao7(
             //System.out.println("currentNode.parentNode.deleteChild(" + currentNode + ")");
             currentNode.parentNode.deleteChild(currentNode);
         }
+
+    }
+
+    @Override
+    public int calcular() {
+
+        //Primeiro calcula as posições "espelhos originais"
+        IntStream.range(0, tabuleiro.dimensao() * tabuleiro.dimensao())
+                .mapToObj(i -> tabuleiro.getPosicaoOrdenada(i).posicaoEspelhoOriginal(tabuleiro.dimensao()))
+                .distinct()
+                .parallel()
+                .forEach(this::encontrarPasseioDoCavalo7);
+
+        //Depois calcula todas as posições, reaproveitando as posições espelho originais já calculadas
+        IntStream.range(0, tabuleiro.dimensao() * tabuleiro.dimensao())
+                .sorted()
+                .parallel()
+                .mapToObj(tabuleiro::getPosicaoOrdenada)
+                .forEach(this::encontrarPasseioDoCavalo7);
+
+        //Soma os resultados
+        return tabuleiro.getMapaPosicaoInicialQuantidadeSolucoes()
+                .values()
+                .stream()
+                .mapToInt(Integer::intValue)
+                .sum();
 
     }
 }

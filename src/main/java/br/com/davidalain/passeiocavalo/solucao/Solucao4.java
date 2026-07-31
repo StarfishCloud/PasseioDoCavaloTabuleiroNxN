@@ -10,10 +10,7 @@ import java.util.stream.Stream;
 
 public record Solucao4(
         Tabuleiro tabuleiro
-) {
-
-    //===================================================================================
-    //===================================================================================
+) implements Solucao {
 
     public TreeNode<Posicao> encontrarPasseioDoCavalo4(Posicao posicaoInicial) {
         int movimentos = 1;
@@ -94,6 +91,11 @@ public record Solucao4(
             visitadosNovo[i] = Arrays.copyOf(visitados[i], tabuleiro.dimensao());
         }
         return visitadosNovo;
+    }
+
+    @Override
+    public int calcular() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
 }

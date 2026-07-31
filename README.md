@@ -50,17 +50,17 @@ Utilize este endpoint para disparar o processamento. O sistema calculará o tota
 * **Formato das respostas de sucesso (JSON):**
 ```json
 {
-    "status": "Sucesso",
-    "totalSolucoes": 1728,
-    "dimensaoTabuleiro": "5x5",
-    "tempoExecucaoMs": 159
+  "status": "Sucesso",
+  "totalSolucoes": 1728,
+  "dimensaoTabuleiro": "5x5",
+  "tempoExecucaoMs": 159
 }
 ```
 
 * **Formato das respostas de erro (JSON):**
 ```json
 {
-  "erro", "Mensagem de erro"
+  "erro": "Mensagem de erro"
 }
 ```
 
@@ -71,6 +71,6 @@ Utilize este endpoint para validar se o servidor está respondendo.
 * **Resposta esperada:**
 ```json
 {
-  "status", "UP"
+  "status": "UP"
 }
 ```

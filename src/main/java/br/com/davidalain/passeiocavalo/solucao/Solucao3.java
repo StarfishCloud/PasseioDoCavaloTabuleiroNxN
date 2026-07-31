@@ -11,10 +11,7 @@ import java.util.List;
 
 public record Solucao3(
         Tabuleiro tabuleiro
-) {
-
-    //===================================================================================
-    //===================================================================================
+) implements Solucao {
 
     public TreeNode<Posicao> encontrarPasseioDoCavalo3(Posicao inicio) {
         int movimentos = 1;
@@ -87,5 +84,10 @@ public record Solucao3(
         }
 
         return false;
+    }
+
+    @Override
+    public int calcular() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

@@ -8,10 +8,7 @@ import java.util.List;
 
 public record Solucao2(
         Tabuleiro tabuleiro
-) {
-
-    //===================================================================================
-    //===================================================================================
+) implements Solucao {
 
     public List<Posicao> encontrarPasseioDoCavalo2(Posicao inicio) {
         List<Posicao> caminho = new ArrayList<>();
@@ -70,4 +67,8 @@ public record Solucao2(
                 .count();
     }
 
+    @Override
+    public int calcular() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

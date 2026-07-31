@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 public record Solucao1(
         Tabuleiro tabuleiro
-) {
+) implements Solucao {
 
     public List<Posicao> encontrarPasseioDoCavalo(Posicao inicio) {
         List<Posicao> caminho = new ArrayList<>();
@@ -67,4 +67,8 @@ public record Solucao1(
         return caminho;
     }
 
+    @Override
+    public int calcular() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }
