@@ -21,8 +21,8 @@ public record Tabuleiro(
             Map<Posicao, Integer> mapaPosicaoInicialQuantidadeSolucoes,
             Map<Posicao, TreeNode<Posicao>> mapaPosicaoInicialTreeNode
     ) {
-        if (dimensao <= 0) {
-            throw new IllegalArgumentException("Dimensão deve ser maior que zero");
+        if (dimensao < 1 || dimensao > 8) {
+            throw new IllegalArgumentException("Dimensão " + dimensao + " inválida. Utilize valores no intervalo: 1 <= dimensao <= 8.");
         }
 
         this.dimensao = dimensao;

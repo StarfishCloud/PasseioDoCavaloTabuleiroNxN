@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.IntStream;
 
 @RestController
 @RequestMapping("/api/passeiocavalo")
@@ -35,41 +34,27 @@ public class PasseioController {
                     .body(Map.of("erro", "Acesso negado. Token inválido ou ausente."));
         }
 
-        int dimensao = request.dimensao() > 0 ? request.dimensao() : 6;
-        
-        if (dimensao > 8) { 
-            return ResponseEntity.badRequest().body(Map.of("erro", "Dimensão muito alta, máximo permitido é 8"));
+        if (request.dimensao() < 1 || request.dimensao() > 8) {
+            return ResponseEntity.badRequest().body(
+                    Map.of("erro", "Dimensão " + request.dimensao() + " inválida. Utilize valores no intervalo: 1 <= dimensao <= 8.")
+            );
         }
 
+        final Solucao7 solucao = new Solucao7(
+                new Tabuleiro(request.dimensao())
+        );
+
+        //Tempo inicial
         long timeIni = System.currentTimeMillis();
-        final Tabuleiro tabuleiro = new Tabuleiro(dimensao);
-        final Solucao7 solucao = new Solucao7(tabuleiro);
-
-        //Primeiro calcula as posições "espelhos originais"
-        IntStream.range(0, dimensao * dimensao)
-                .mapToObj(i -> tabuleiro.getPosicaoOrdenada(i).posicaoEspelhoOriginal(dimensao))
-                .distinct()
-                .parallel()
-                .forEach(solucao::encontrarPasseioDoCavalo7);
-
-        //Depois calcula todas as posições, reaproveitando as posições espelho originais já calculadas
-        IntStream.range(0, dimensao * dimensao)
-                .sorted()
-                .parallel()
-                .mapToObj(tabuleiro::getPosicaoOrdenada)
-                .forEach(solucao::encontrarPasseioDoCavalo7);
-
-        long timeEnd = System.currentTimeMillis();
 
         //Soma os resultados
-        int somaTotal = tabuleiro.getMapaPosicaoInicialQuantidadeSolucoes()
-                .values()
-                .stream()
-                .mapToInt(Integer::intValue)
-                .sum();
+        int somaTotal = solucao.calcular();
+
+        //Tempo final
+        long timeEnd = System.currentTimeMillis();
 
         return ResponseEntity.ok(Map.of(
-                "dimensaoTabuleiro", dimensao + "x" + dimensao,
+                "dimensaoTabuleiro", request.dimensao() + "x" + request.dimensao(),
                 "totalSolucoes", somaTotal,
                 "tempoExecucaoMs", (timeEnd - timeIni),
                 "status", "Sucesso"
